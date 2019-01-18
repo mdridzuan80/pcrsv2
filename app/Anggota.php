@@ -53,7 +53,7 @@ class Anggota extends BaseModel
 
     public function pegawaiPenilai()
     {
-        return $this->hasMany(PegawaiPenilai::class, 'anggota_id');
+        return $this->hasOne(PegawaiPenilai::class, 'anggota_id');
     }
 
     public function pegawaiYangDinilai()
