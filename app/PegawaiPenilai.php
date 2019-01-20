@@ -11,6 +11,8 @@ class PegawaiPenilai extends Model
 
     protected $table = 'pegawai_penilai';
 
+    protected $fillable = ['anggota_id', 'pegawai_id', 'pegawai_flag'];
+
     public function personel()
     {
         return $this->belongsTo(anggota::class);

@@ -61,6 +61,11 @@ class Anggota extends BaseModel
         return $this->hasMany(PegawaiPenilai::class, 'pegawai_id');
     }
 
+    public function pegawaiYangMenilai()
+    {
+        return $this->hasMany(PegawaiPenilai::class, 'anggota_id');
+    }
+
     public function scopeAuthorize($query)
     {
         $related = [];
@@ -105,8 +110,13 @@ class Anggota extends BaseModel
 
     public function kemaskiniPPP(Request $request)
     {
-        $penilai = Anggota::find($request->input('comSenPPP'));
-        $this->OPHONE = $penilai->SSN;
-        $this->save();
+        $this->pegawaiYangMenilai()->updateOrCreate(
+            [
+                'pegawai_flag' => $request->input('pegawai-flag'),
+            ],
+            [
+                'pegawai_id' => $request->input('comSenPPP'),
+            ]
+        );
     }
 }

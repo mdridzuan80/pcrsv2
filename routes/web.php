@@ -54,7 +54,7 @@ Route::middleware('auth:internal,ldap')->group(function () {
             
             // Pegawai Penilai
             Route::get('/{profil}/penilai/', 'AnggotaController@rpcPenilaiIndex')->middleware('can:view-penilai');
-            Route::put('/{profil}/penilai/', 'AnggotaController@rpcPenilaiUpdate')->middleware('can:edit-penilai');
+            Route::post('/{profil}/penilai/', 'AnggotaController@rpcPenilaiUpdate')->middleware('can:edit-penilai');
         });
 
         Route::prefix('pengguna')->group(function () {
