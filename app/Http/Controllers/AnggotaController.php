@@ -63,7 +63,11 @@ class AnggotaController extends BaseController
     // Pegawai Penilai
     public function rpcPenilaiIndex(Anggota $profil)
     {
-        return view('anggota.penilai.index', compact('profil'));
+        $penilai = optional(($profil->pegawaiPenilai()->with('penilai')->get()))->mapToGroups(function ($item, $key) {
+            return [$item->pegawai_flag => $item->penilai];
+        });
+
+        return view('anggota.penilai.index', compact('profil', 'penilai'));
     }
 
     public function rpcPenilaiUpdate(Request $request, Anggota $profil)

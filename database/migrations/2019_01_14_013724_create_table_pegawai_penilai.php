@@ -23,6 +23,7 @@ class CreateTablePegawaiPenilai extends Migration
             //indexing
             $table->index('anggota_id');
             $table->index('pegawai_id');
+            $table->unique(['anggota_id', 'pegawai_flag']);
 
         });
     }

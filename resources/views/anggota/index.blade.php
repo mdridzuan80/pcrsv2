@@ -144,6 +144,53 @@
     </div>
     <!-- /.modal -->
 
+        <!-- Modal --> 
+    <div class="modal fade" id="modal-edit-ppp">
+        <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Default Modal</h4>
+            </div>
+            <div class="modal-body">
+                <form id="frm-ppp" method="post" role="form">
+                    <input id="pegawai-flag" type="hidden" name="pegawai-flag">
+                    @csrf
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div id="panel-department2" class="panel panel-default" >
+                                <div class="panel-heading">
+                                    <div><i class="fa fa-sitemap fa-fw"></i> Bahagian/Unit</div>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input id="sub-dept2" type="checkbox"> Sub Jabatan
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="panel-body" style="overflow:auto;">
+                                    <div id="departments2"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <select id="comSenPPP" class="form-control" size='20' name="comSenPPP"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="btn-ppp-batal" type="button" class="btn btn-link" style="color:#dd4b39;" title="Kemaskini maklumat pegawai penilai">BATAL</button>
+                    <button id="btn-ppp-simpan" type="submit" class="btn btn-success" title="Kemaskini maklumat pegawai penilai">SIMPAN</button>
+                </form>
+
+            </div>
+        </div>
+        <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+
     <!-- Modal --> 
     <div class="modal fade" id="modal-peranan">
         <div class="modal-dialog modal-md">
@@ -180,13 +227,13 @@
     <!-- Modal --> 
     <div class="modal fade" id="modal-edit-peranan">
         <div class="modal-dialog modal-md">
-        <div class="modal-content">
-            <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title">Default Modal</h4>
-            </div>
-            <div class="modal-body">
+            <div class="modal-content">
+                <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Default Modal</h4>
+                </div>
+                <div class="modal-body">
                     <div id="ctxSubsPeranan" class="table-responsive">
                         <table id="tbl-desc-peranan" class="table table-bordered">
                             <tbody>
@@ -210,17 +257,20 @@
                         </table>
                     </div>
                     <div id="ctxJabatan"></div>
-                
-            </div>
-            <div class="modal-footer">
+                </div>
+                <div class="modal-footer">
                     <button id="btn-batal" type="button" class="btn btn-link pull-right" style="color:#dd4b39;" data-dismiss="modal" aria-label="Close" >BATAL</button>
+                </div>
             </div>
-        </div>
-        <!-- /.modal-content -->
-        </div>
+            <!-- /.modal-content -->
+            </div>
+            <div class="overlay">
+                <i class="fa fa-refresh fa-spin"></i>
+            </div>
         <!-- /.modal-dialog -->
     </div>
     <!-- /.modal -->
+
     <!-- Modal --> 
     <div class="modal fade" id="modal-man-login">
         <div class="modal-dialog modal-lg">
@@ -387,17 +437,19 @@
         }
 
         function populateDg2(url, place, dataSearch) {
+            var options = $("#comSenPPP");
+            options.children().remove();
+            options.append(new Option('Loading...', 0));
+
             $.ajax({
                 method: 'post',
                 url: url,
                 data: dataSearch,
                 success: function(data, textStatus, jqXHR) {
-                    var options = $("#comSenPPP");
-                    var pemilai = data.data;
                     options.children().remove();
 
                     $.each(data.data, function(key, val) {
-                        options.append(new Option(val.nama+' ('+val.jawatan+')', val.anggota_id, false, (parseInt($('#ppp_userid').val()) === val.anggota_id ? true : false)));
+                        options.append(new Option(val.nama+' ('+val.jawatan+')', val.anggota_id, false, (penilai.id === val.anggota_id ? true : false)));
                     });
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
@@ -821,7 +873,6 @@
                 url: base_url+'rpc/anggota/'+mProfil.userId+'/penilai',
                 success: function(data, textStatus, jqXHR) {
                     modalBody.html(data);
-                    populateDept2('#panel-department2', '#departments2', base_url+'rpc/anggota_penilai_grid', '#test');
                 }
             });
         });
@@ -837,8 +888,8 @@
             $(this).hide();
         });
 
-        $('#modal-ppp').on('click', '#btn-ppp-batal', function(e){
-            $('#modal-ppp').modal('hide');
+        $('#modal-edit-ppp').on('click', '#btn-ppp-batal', function(e){
+            $('#modal-edit-ppp').modal('hide');
         });
 
         $('#modal-ppp').on('submit', '#frm-ppp', function(e) {
@@ -890,6 +941,26 @@
                     type: 'error'
                 });
             });
+        });
+
+        $('#modal-ppp').on('click', '.btn-ppp-edit', function(e) {
+            var header = $('#modal-edit-ppp').find('.modal-title');
+            var pegawaiFlag = $(this).data('pegawai_flag');
+            penilai.id = $(this).data('pegawai_id');
+            penilai.flag = pegawaiFlag;
+
+            $('#modal-edit-ppp').find('.modal-header').css('backgroundColor','steelblue');
+            $('#modal-edit-ppp').find('.modal-header').css('color','white');
+
+            if (pegawaiFlag == {{ \App\PegawaiPenilai::FLAG_PEGAWAI_PERTAMA }})
+                header.text('PEGAWAI PENILAI PERTAMA');
+
+            if (pegawaiFlag == {{ \App\PegawaiPenilai::FLAG_PEGAWAI_KEDUA }})
+                header.text('PEGAWAI PENILAI KEDUA');
+
+            $('#pegawai-flag').val(pegawaiFlag);
+
+            $('#modal-edit-ppp').modal({backdrop: 'static', keyboard: false});
         });
 
         function loadWbbBulanan(placeholder) {
@@ -1669,6 +1740,7 @@
             });
         });
 
+
         $('#modal-edit-peranan').on('click', '#departmentDisplay3', function(e) {
             e.preventDefault();
             $('#departmentsTree3').css('width', $(this).parent().actual('width'));
@@ -1682,17 +1754,87 @@
             });
         });
 
-        $('#modal-edit-peranan').on('hidden.bs.modal', function(e) {
-            var modalBody = $(this).find('.modal-body');
+        $('#modal-edit-ppp').on('show.bs.modal', function (e) {
+            populateDept2('#panel-department2', '#departments2', base_url+'rpc/anggota_penilai_grid', '#test');
+        });
 
-            //modalBody.find('#ctxPeranan').html('<h4><i class="fa fa-refresh fa-spin"></i> Loading...</h4>');
-            //modalBody.find('#ctxJabatan').html('');
+        $('#modal-edit-ppp').on('submit', '#frm-ppp', function(e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+            var formEl = $(this);
+            
+            swal({
+                title: 'Amaran!',
+                text: 'Anda pasti untuk mengemaskini maklumat ini?',
+                type: 'warning',
+                cancelButtonText: 'Tidak',
+                showCancelButton: true,
+                confirmButtonText: 'Ya!',
+                showLoaderOnConfirm: true,
+                allowOutsideClick: false,
+                allowOutsideClick: () => !swal.isLoading(),
+                preConfirm: () => {
+                    return new Promise((resolve, reject) => {
+                        $.ajax({
+                            method: 'post',
+                            data: formData,
+                            cache       : false,
+                            contentType : false,
+                            processData : false,
+                            url: base_url+'rpc/anggota/'+mProfil.userId+'/penilai',
+                            success: function() {
+                                resolve();
+                            },
+                            error: function(err) {
+                                reject();
+                            },
+                            statusCode: login()
+                        });
+                    })
+                }
+            }).then((result) => {
+                if (result.value) {
+                    swal({
+                        title: 'Berjaya!',
+                        text: 'Maklumat telah dikemaskini',
+                        type: 'success'
+                    }).then(() => {
+
+                        var modalBody = $('#modal-ppp').find('.modal-body');
+            
+                        $.ajax({
+                            url: base_url+'rpc/anggota/'+mProfil.userId+'/penilai',
+                            success: function(data, textStatus, jqXHR) {
+                                modalBody.html(data);
+                            }
+                        });
+
+                        modalBody.html('<h4><i class="fa fa-refresh fa-spin"></i> Loading...</h4>');
+
+                        $('#modal-edit-ppp').modal('hide')
+                    });
+                }
+            }).catch(function (error) {
+                swal({
+                    title: 'Ralat!',
+                    text: 'Proses tidak berjaya!. Sila berhubung dengan Pentadbir sistem',
+                    type: 'error'
+                });
+            });
+        });
+
+        $('#modal-edit-ppp').on('hidden.bs.modal', function(e) {
+            var options = $("#comSenPPP");
+            options.children().remove();
+            options.append(new Option('Loading...', 0));
+            
             pcrsAdjustBackdrop();
         });
 
         function pcrsAdjustBackdrop()
         {
             var blur = $('.modal-backdrop:first').css('z-index') - 20;
+
             $('.modal-backdrop:first').css('z-index', blur);
         }
     });
