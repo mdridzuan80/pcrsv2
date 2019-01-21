@@ -74,4 +74,10 @@ class AnggotaController extends BaseController
     {
         $profil->kemaskiniPPP($request);
     }
+
+    public function rpcBaseBahagianShow(Anggota $profil)
+    {
+        return view('anggota.base_bahagian.show', compact('profil'));
+    }
+
 }

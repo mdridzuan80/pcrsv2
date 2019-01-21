@@ -30,6 +30,11 @@ Route::middleware('auth:internal,ldap')->group(function () {
         Route::get('/pengguna', 'PenggunaController@index')->name('pengguna');
     });
 
+    Route::middleware('can:view-setting')->group(function () {
+        Route::get('/konfigurasi', 'KonfigurasiController@index')->name('konfigurasi');
+    });
+
+
     //Local API
     Route::prefix('rpc')->middleware('ajax')->group(function () {
         // Department
@@ -55,6 +60,9 @@ Route::middleware('auth:internal,ldap')->group(function () {
             // Pegawai Penilai
             Route::get('/{profil}/penilai/', 'AnggotaController@rpcPenilaiIndex')->middleware('can:view-penilai');
             Route::post('/{profil}/penilai/', 'AnggotaController@rpcPenilaiUpdate')->middleware('can:edit-penilai');
+
+            //Base Bahagian
+            Route::get('/{profil}/basebahagian/', 'AnggotaController@rpcBaseBahagianShow')->middleware('can:view-base-bahagian');
         });
 
         Route::prefix('pengguna')->group(function () {

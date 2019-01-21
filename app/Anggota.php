@@ -66,6 +66,11 @@ class Anggota extends BaseModel
         return $this->hasMany(PegawaiPenilai::class, 'anggota_id');
     }
 
+    public function xtraAttr()
+    {
+        return $this->hasOne(XtraAnggota::class, 'anggota_id');
+    }
+
     public function scopeAuthorize($query)
     {
         $related = [];
