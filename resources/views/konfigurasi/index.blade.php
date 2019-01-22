@@ -1,4 +1,4 @@
-@inject('FlowBahagian', 'App\FlowBahagian')
+@inject('Flow', 'App\Flow')
 
 @extends('layouts.master')
 
@@ -113,8 +113,8 @@
                             url: base_url + 'rpc/konfigurasi/flow_bahagian/' + id,
                             success: function( result, textStatus, jqXHR ) {
                                 var option = $('<select id="com-flow-bahagian" class="form-control"></select>');
-                                option.append('<option value="{{ $FlowBahagian::BIASA }}" ' + ((result.data.flow == '{{ $FlowBahagian::BIASA }}') ? '"selected"' : '') + '>{{ $FlowBahagian::BIASA }}</option>');
-                                option.append('<option value="{{ $FlowBahagian::KETUA }}" ' + ((result.data.flow == '{{ $FlowBahagian::KETUA }}') ? '"selected"' : '') + '>{{ $FlowBahagian::KETUA }}</option>');
+                                option.append('<option value="{{ $Flow::BIASA }}" ' + ((result.data.flow == '{{ $Flow::BIASA }}') ? '"selected"' : '') + '>{{ $Flow::BIASA }}</option>');
+                                option.append('<option value="{{ $Flow::KETUA }}" ' + ((result.data.flow == '{{ $Flow::KETUA }}') ? '"selected"' : '') + '>{{ $Flow::KETUA }}</option>');
                                 placeholder.html(option.val(result.data.flow));
                             }
                         });
