@@ -80,4 +80,9 @@ class AnggotaController extends BaseController
         return view('anggota.base_bahagian.show', compact('profil'));
     }
 
+    public function rpcBaseBahagianStore(Request $request, Anggota $profil)
+    {
+        $profil->storeBaseBahagian($request);
+    }
+
 }

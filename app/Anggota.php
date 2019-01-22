@@ -124,4 +124,9 @@ class Anggota extends BaseModel
             ]
         );
     }
+
+    public function storeBaseBahagian(Request $request)
+    {
+        $this->xtraAttr()->updateOrCreate([], ['basedept_id' => $request->input('txtDepartmentId')]);
+    }
 }

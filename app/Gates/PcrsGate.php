@@ -34,6 +34,7 @@ class PcrsGate
 
         // Base Bahagian
         Gate::define('view-base-bahagian', $this->minPrivilege(Role::ADMIN));
+        Gate::define('edit-base-bahagian', $this->minPrivilege(Role::ADMIN));
 
         // Konfigurasi
         Gate::define('view-setting', $this->minPrivilege(Role::KETUA_KERANI));

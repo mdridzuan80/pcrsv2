@@ -1907,6 +1907,64 @@
             }
         });
 
+        $('#modal-base-bahagian').on('submit', '#frm-xtra-attr', function(e) {
+
+            e.preventDefault();
+            
+            var user_id = $('#txtDepartmentId').val();
+            var formData = new FormData(this);
+
+            swal({
+                title: 'Amaran!',
+                text: 'Anda pasti untuk mengemaskini maklumat ini?',
+                type: 'warning',
+                cancelButtonText: 'Tidak',
+                showCancelButton: true,
+                confirmButtonText: 'Ya!',
+                showLoaderOnConfirm: true,
+                allowOutsideClick: () => !swal.isLoading(),
+                preConfirm: (email) => {
+                    return new Promise((resolve,reject) => {
+                         $.ajax({
+                            method: 'post',
+                            data: formData,
+                            cache       : false,
+                            contentType : false,
+                            processData : false,
+                            url: base_url+'rpc/anggota/'+mProfil.userId+'/basebahagian',
+                            success: function(data, extStatus, jqXHR) {
+                                resolve({value: true});
+                            },
+                            error: function(jqXHR, textStatus, errorThrown) {
+                                reject(textStatus);
+                            },
+                            statusCode: login()
+                        });
+                    })
+                }
+            }).then((result) => {
+                if (result.value) {
+                    swal({
+                        title: 'Berjaya!',
+                        text: 'Maklumat telah dikemaskini',
+                        type: 'success'
+                    }).then(() => $('#modal-base-bahagian').modal('hide'));
+
+                }
+            }).catch(function (error) {
+                swal({
+                    title: 'Ralat!',
+                    text: 'Pengemaskinian tidak berjaya!. Sila berhubung dengan Pentadbir sistem',
+                    type: 'error'
+                });
+            });
+        });
+
+        $('#modal-base-bahagian').on('hidden.bs.modal', function(e) {
+            e.preventDefault();
+            $(this).find('.modal-body').html('<h4><i class="fa fa-refresh fa-spin"></i> Loading...</h4>');
+        })
+
         $('#modal-base-bahagian').on('click', '#departmentDisplay', function(e) {
             e.preventDefault();
             $('#departmentsTree').css('width', $(this).parent().actual('width'));
