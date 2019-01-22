@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateFlowBahagianTable extends Migration
+class CreateTableFlowAnggota extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,16 @@ class CreateFlowBahagianTable extends Migration
      */
     public function up()
     {
-        Schema::create('flow_bahagian', function (Blueprint $table) {
+        Schema::create('flow_anggota', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('dept_id')->unsigned();
-            $table->string('flag')->default('BIASA'); // status 'BIASA' Flow biasa, 'KETUA' Flow ketua bahagian/ Unit
+            $table->integer('anggota_id')->unsigned();
+            $table->string('flag')->default('INHERIT'); // status 'INHERIT' ikut Flow Jabatan, 'BIASA' Flow biasa, 'KETUA' Flow ketua bahagian/ Unit
             $table->string('ubah_user_id')->unsigned();
             $table->timestamps();
 
-            $table->index('dept_id');
+            $table->index('anggota_id');
             $table->index('flag');
+
         });
     }
 
@@ -32,6 +33,6 @@ class CreateFlowBahagianTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('flow_bahagian');
+        Schema::dropIfExists('flow_anggota');
     }
 }

@@ -71,6 +71,11 @@ class Anggota extends BaseModel
         return $this->hasOne(XtraAnggota::class, 'anggota_id');
     }
 
+    public function flow()
+    {
+        return $this->hasOne(FlowAnggota::class, 'anggota_id');
+    }
+
     public function scopeAuthorize($query)
     {
         $related = [];
