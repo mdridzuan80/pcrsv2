@@ -81,5 +81,10 @@ Route::middleware('auth:internal,ldap')->group(function () {
             Route::post('/{profil}/acara', 'KalendarController@rpcEventAnggotaStore');
             Route::get('/{profil}/acara/{acara}/{jenis}', 'KalendarController@rpcEventAnggotaShow');
         });
+
+        Route::prefix('konfigurasi')->group(function () {
+            Route::get('/flow_bahagian/{department}', 'KonfigurasiController@rpcFlowBahagianShow')->middleware('can:edit-flow-bahagian-setting');
+            Route::post('/flow_bahagian/{department}', 'KonfigurasiController@rpcFlowBahagianUpdate')->middleware('can:edit-flow-bahagian-setting');
+        });
     });
 });

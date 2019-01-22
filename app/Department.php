@@ -2,8 +2,8 @@
 
 namespace App;
 
+use Auth;
 use App\Base\BaseModel;
-use Illuminate\Support\Facades\Auth;
 
 class Department extends BaseModel
 {
@@ -23,12 +23,17 @@ class Department extends BaseModel
         return $this->belongsToMany(Role::class, 'role_user');
     }
 
+    public function flow()
+    {
+        return $this->hasOne(FlowBahagian::class, 'dept_id');
+    }
+
     public static function senaraiDepartment()
     {
-        return SELF::when(Auth::user()->username !== env('PCRS_DEFAULT_USER_ADMIN', 'admin'), function($query) {
+        return SELF::when(Auth::user()->username !== env('PCRS_DEFAULT_USER_ADMIN', 'admin'), function ($query) {
             $query->authorize();
-         })
-        ->orderBy('DEPTNAME')->get();
+        })
+            ->orderBy('DEPTNAME')->get();
     }
 
     static public function scopeAuthorize($query)
@@ -45,5 +50,10 @@ class Department extends BaseModel
         }
 
         $query->whereIn('DEPTID', array_merge($effectedDept, $related));
+    }
+
+    public function updateFlow($request)
+    {
+        $this->flow()->updateOrCreate([], ['flag' => $request->input('flag'), 'ubah_user_id' => Auth::user()->username]);
     }
 }

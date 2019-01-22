@@ -38,7 +38,7 @@ class PcrsGate
 
         // Konfigurasi
         Gate::define('view-setting', $this->minPrivilege(Role::KETUA_KERANI));
-
+        Gate::define('edit-flow-bahagian-setting', $this->minPrivilege(Role::KETUA_KERANI));
     }
 
     public function minPrivilege($minPriv)
