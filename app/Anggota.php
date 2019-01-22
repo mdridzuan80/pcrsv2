@@ -66,6 +66,11 @@ class Anggota extends BaseModel
         return $this->hasMany(PegawaiPenilai::class, 'anggota_id');
     }
 
+    public function xtraAttr()
+    {
+        return $this->hasOne(XtraAnggota::class, 'anggota_id');
+    }
+
     public function scopeAuthorize($query)
     {
         $related = [];
@@ -118,5 +123,10 @@ class Anggota extends BaseModel
                 'pegawai_id' => $request->input('comSenPPP'),
             ]
         );
+    }
+
+    public function storeBaseBahagian(Request $request)
+    {
+        $this->xtraAttr()->updateOrCreate([], ['basedept_id' => $request->input('txtDepartmentId')]);
     }
 }

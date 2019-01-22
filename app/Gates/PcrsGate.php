@@ -6,7 +6,7 @@ use App\Role;
 use Illuminate\Support\Facades\Gate;
 
 class PcrsGate
-{    
+{
     public function register()
     {
         // Anggota
@@ -31,6 +31,14 @@ class PcrsGate
         Gate::define('view-peranan', $this->minPrivilege(Role::KETUA_KERANI));
         Gate::define('add-peranan', $this->minPrivilege(Role::KETUA_KERANI));
         Gate::define('delete-peranan', $this->minPrivilege(Role::KETUA_KERANI));
+
+        // Base Bahagian
+        Gate::define('view-base-bahagian', $this->minPrivilege(Role::ADMIN));
+        Gate::define('edit-base-bahagian', $this->minPrivilege(Role::ADMIN));
+
+        // Konfigurasi
+        Gate::define('view-setting', $this->minPrivilege(Role::KETUA_KERANI));
+
     }
 
     public function minPrivilege($minPriv)

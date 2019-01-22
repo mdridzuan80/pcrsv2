@@ -60,6 +60,9 @@
                                                     <i class="fa fa-ellipsis-v"></i>
                                                 </botton>
                                                 <ul class="dropdown-menu dropdown-menu-right">
+                                                    @can('view-base-bahagian')
+                                                    <li><a id="btn-base-bahagian" href="#"><i class="fa  fa-map-marker"></i> Base Bahagian</a></li>    
+                                                    @endcan
                                                     <li><a id="btn-man-login" href="#"><i class="fa fa-key"></i> Login</a></li>
                                                     <li><a id="btn-arkib" href="#"><i class="fa fa-archive"></i> Arkib</a></li>
                                                 </ul>
@@ -274,6 +277,27 @@
     <!-- Modal --> 
     <div class="modal fade" id="modal-man-login">
         <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Default Modal</h4>
+            </div>
+            <div class="modal-body">
+                <h4>
+                    <i class="fa fa-refresh fa-spin"></i> Loading...
+                </h4>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+
+    <!-- Modal --> 
+    <div class="modal fade" id="modal-base-bahagian">
+        <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -1837,6 +1861,125 @@
 
             $('.modal-backdrop:first').css('z-index', blur);
         }
+
+        $('#btn-base-bahagian').on('click', function(e) {
+            e.preventDefault();
+
+            var modal = $('#modal-base-bahagian');
+
+            modal.find('.modal-header').css('backgroundColor','steelblue');
+            modal.find('.modal-header').css('color','white');
+            modal.find('.modal-title').text('BASE BAHAGIAN : '+mProfil.title);
+
+            modal.modal({backdrop: 'static', keyboard: false});
+        });
+
+        $('#modal-base-bahagian').on('show.bs.modal', function(e) {
+            getProfilEdit($(this).find('.modal-body'));
+
+            function getProfilEdit($placeholder)
+            {
+                departments[0].state.selected=false;
+                $.ajax({
+                    url: base_url+'rpc/anggota/'+mProfil.userId+'/basebahagian',
+                    success: function(data, textStatus, jqXHR) {
+                        $placeholder.html(data);
+
+                        $('#departmentsTree').jstree({
+                            core:{
+                                multiple : false,
+                                check_callback: true,
+                                data: departments
+                            }
+                        });
+                        
+                        $('#departmentsTree').on('select_node.jstree', function (e, data) {
+                            var id = data.instance.get_node(data.selected[0]).id;
+                            var text = data.instance.get_node(data.selected[0]).text;
+
+                            $('.departmentDisplay').val(text);
+                            $('.departmentDisplayId').val(id);
+                            $("#treeDisplay").hide();
+                        });
+                    },
+                    statusCode: login()
+                });
+            }
+        });
+
+        $('#modal-base-bahagian').on('submit', '#frm-xtra-attr', function(e) {
+
+            e.preventDefault();
+            
+            var user_id = $('#txtDepartmentId').val();
+            var formData = new FormData(this);
+
+            swal({
+                title: 'Amaran!',
+                text: 'Anda pasti untuk mengemaskini maklumat ini?',
+                type: 'warning',
+                cancelButtonText: 'Tidak',
+                showCancelButton: true,
+                confirmButtonText: 'Ya!',
+                showLoaderOnConfirm: true,
+                allowOutsideClick: () => !swal.isLoading(),
+                preConfirm: (email) => {
+                    return new Promise((resolve,reject) => {
+                         $.ajax({
+                            method: 'post',
+                            data: formData,
+                            cache       : false,
+                            contentType : false,
+                            processData : false,
+                            url: base_url+'rpc/anggota/'+mProfil.userId+'/basebahagian',
+                            success: function(data, extStatus, jqXHR) {
+                                resolve({value: true});
+                            },
+                            error: function(jqXHR, textStatus, errorThrown) {
+                                reject(textStatus);
+                            },
+                            statusCode: login()
+                        });
+                    })
+                }
+            }).then((result) => {
+                if (result.value) {
+                    swal({
+                        title: 'Berjaya!',
+                        text: 'Maklumat telah dikemaskini',
+                        type: 'success'
+                    }).then(() => $('#modal-base-bahagian').modal('hide'));
+
+                }
+            }).catch(function (error) {
+                swal({
+                    title: 'Ralat!',
+                    text: 'Pengemaskinian tidak berjaya!. Sila berhubung dengan Pentadbir sistem',
+                    type: 'error'
+                });
+            });
+        });
+
+        $('#modal-base-bahagian').on('hidden.bs.modal', function(e) {
+            e.preventDefault();
+            $(this).find('.modal-body').html('<h4><i class="fa fa-refresh fa-spin"></i> Loading...</h4>');
+        })
+
+        $('#modal-base-bahagian').on('click', '#departmentDisplay', function(e) {
+            e.preventDefault();
+            $('#departmentsTree').css('width', $(this).parent().actual('width'));
+            $('#departmentsTree').jstree('select_node', $('.departmentDisplayId').val().toString());
+            $('#treeDisplay').toggle();
+
+            $(document).click(function (e) {
+                if (!$(e.target).hasClass("departmentDisplay") 
+                    && $(e.target).parents("#treeDisplay").length === 0) 
+                {
+                    $("#treeDisplay").hide();
+                }
+            });
+        });
+
     });
 </script>
 

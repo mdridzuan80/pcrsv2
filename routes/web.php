@@ -30,6 +30,11 @@ Route::middleware('auth:internal,ldap')->group(function () {
         Route::get('/pengguna', 'PenggunaController@index')->name('pengguna');
     });
 
+    Route::middleware('can:view-setting')->group(function () {
+        Route::get('/konfigurasi', 'KonfigurasiController@index')->name('konfigurasi');
+    });
+
+
     //Local API
     Route::prefix('rpc')->middleware('ajax')->group(function () {
         // Department
@@ -53,8 +58,12 @@ Route::middleware('auth:internal,ldap')->group(function () {
             Route::delete('/waktu_bekerja_harian/{profil}/{id}', 'WaktuBerperingkatController@rpcDelete')->middleware('can:delete-waktu_bekerja');
             
             // Pegawai Penilai
-            Route::get('/{profil}/penilai/', 'AnggotaController@rpcPenilaiIndex')->middleware('can:view-penilai');
-            Route::post('/{profil}/penilai/', 'AnggotaController@rpcPenilaiUpdate')->middleware('can:edit-penilai');
+            Route::get('/{profil}/penilai', 'AnggotaController@rpcPenilaiIndex')->middleware('can:view-penilai');
+            Route::post('/{profil}/penilai', 'AnggotaController@rpcPenilaiUpdate')->middleware('can:edit-penilai');
+
+            //Base Bahagian
+            Route::get('/{profil}/basebahagian', 'AnggotaController@rpcBaseBahagianShow')->middleware('can:view-base-bahagian');
+            Route::post('/{profil}/basebahagian', 'AnggotaController@rpcBaseBahagianStore')->middleware('can:edit-base-bahagian');
         });
 
         Route::prefix('pengguna')->group(function () {
