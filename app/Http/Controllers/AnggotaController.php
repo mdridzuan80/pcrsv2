@@ -7,6 +7,7 @@ use App\Anggota;
 use League\Fractal\Manager;
 use App\Base\BaseController;
 use Illuminate\Http\Request;
+use League\Fractal\Resource\Item;
 use App\Transformers\Anggota as AnggotaTransformer;
 use League\Fractal\Resource\Collection as FCollection;
 
@@ -85,4 +86,19 @@ class AnggotaController extends BaseController
         $profil->storeBaseBahagian($request);
     }
 
+    public function rpcFlowShow(Manager $fractal, AnggotaTransformer $anggotaTransformer, Anggota $profil)
+    {
+        $profil->load(['flow', 'xtraAttr.flowBaseDepartment']);
+
+        $fractal->parseIncludes('flowbahagian,flowanggota');
+        $resource = new Item($profil, $anggotaTransformer);
+        $transform = $fractal->createData($resource);
+
+        return response()->json($transform->toArray());
+    }
+
+    public function rpcFlowUpdate(Request $request, Anggota $profil)
+    {
+        $profil->updateFlow($request);
+    }
 }

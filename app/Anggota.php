@@ -134,4 +134,10 @@ class Anggota extends BaseModel
     {
         $this->xtraAttr()->updateOrCreate([], ['basedept_id' => $request->input('txtDepartmentId')]);
     }
+
+    public function updateFlow(Request $request)
+    {
+        $this->flow()->updateOrCreate([], ['flag' => $request->input('flag'), 'ubah_user_id' => Auth::user()->username]);
+    }
+
 }

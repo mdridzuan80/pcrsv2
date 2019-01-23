@@ -1,3 +1,5 @@
+@inject('Flow', 'App\Flow')
+
 @extends('layouts.master')
 
 @section('content')
@@ -63,6 +65,7 @@
                                                     @can('view-base-bahagian')
                                                     <li><a id="btn-base-bahagian" href="#"><i class="fa  fa-map-marker"></i> Base Bahagian</a></li>    
                                                     @endcan
+                                                    <li><a id="btn-flow-profil" href="#"><i class="fa fa-random"></i> Flow</a></li>
                                                     <li><a id="btn-man-login" href="#"><i class="fa fa-key"></i> Login</a></li>
                                                     <li><a id="btn-arkib" href="#"><i class="fa fa-archive"></i> Arkib</a></li>
                                                 </ul>
@@ -315,6 +318,69 @@
         <!-- /.modal-dialog -->
     </div>
     <!-- /.modal -->
+
+        <!-- Modal --> 
+    <div class="modal fade" id="modal-flow-profil">
+        <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Default Modal</h4>
+            </div>
+            <div class="modal-body">
+                <div id="loading" >
+                    <h4>
+                        <i class="fa fa-refresh fa-spin"></i> Loading...
+                    </h4>
+                </div>
+                <div id="konfigurasi" style="display: none;">
+                   <table class="table table-striped">
+                        <tbody>
+                            <tr>
+                                <td style="width: 40%">
+                                    <b>Flow Kelulusan Bahagian/ Unit</b>
+                                    <p class="help-block">
+                                        Memastikan flow kelulusan mengikut keperluan bahagian atau unit.
+                                        <ul class="list-unstyled">
+                                            <li>'<b>BIASA</b>' adalah flow mengikut Penilai Pertama. (*)</li>
+                                            <li>'<b>KETUA</b>' adalah flow semua permohonan diluluskan oleh Ketua Bahagian/ Unit.</li>
+                                        </ul>
+                                        
+                                    </p>
+                                </td>
+                                <td style="width: 60%">
+                                    NILAI: <span id="info-flow-bahagian">LALAA</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 40%">
+                                    <b>Flow Kelulusan Profil</b>
+                                    <p class="help-block">
+                                        Memastikan flow kelulusan mengikut keperluan bahagian atau unit.
+                                        <ul class="list-unstyled">
+                                            <li>'<b>INHERIT</b>' adalah flow mengikut Konfigurasi Bahagian/ Unit. (*)</li>
+                                            <li>'<b>BIASA</b>' adalah flow mengikut Penilai Pertama.</li>
+                                            <li>'<b>KETUA</b>' adalah flow semua permohonan diluluskan oleh Ketua Bahagian/ Unit.</li>
+                                        </ul>
+                                        
+                                    </p>
+                                </td>
+                                <td style="width: 60%">
+                                   NILAI: <span id="info-flow-profil"></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+
 
 @endsection
 
@@ -1864,14 +1930,7 @@
 
         $('#btn-base-bahagian').on('click', function(e) {
             e.preventDefault();
-
-            var modal = $('#modal-base-bahagian');
-
-            modal.find('.modal-header').css('backgroundColor','steelblue');
-            modal.find('.modal-header').css('color','white');
-            modal.find('.modal-title').text('BASE BAHAGIAN : '+mProfil.title);
-
-            modal.modal({backdrop: 'static', keyboard: false});
+            openModal('#modal-base-bahagian', 'BASE BAHAGIAN');
         });
 
         $('#modal-base-bahagian').on('show.bs.modal', function(e) {
@@ -1980,6 +2039,60 @@
             });
         });
 
+        $('#btn-flow-profil').on('click', function(e) {
+            e.preventDefault();
+            openModal('#modal-flow-profil', 'FLOW');
+        });
+
+        $('#modal-flow-profil').on('show.bs.modal', function(e) {
+
+            $.ajax({
+                url: base_url + 'rpc/anggota/' + mProfil.userId + '/flow',
+                success: function(data, extStatus, jqXHR) {
+                    console.log(data);
+                    $('#info-flow-bahagian').text(data.data.flowbahagian.data.flow);
+
+                    var option = $('<select id="com-flow-profil" class="form-control"></select>');
+                    option.append('<option value="{{ $Flow::INHERIT }}" ' + ((data.data.flowanggota.data.flow == '{{ $Flow::INHERIT }}') ? '"selected"' : '') + '>{{ $Flow::INHERIT }}</option>');
+                    option.append('<option value="{{ $Flow::BIASA }}" ' + ((data.data.flowanggota.data.flow == '{{ $Flow::BIASA }}') ? '"selected"' : '') + '>{{ $Flow::BIASA }}</option>');
+                    option.append('<option value="{{ $Flow::KETUA }}" ' + ((data.data.flowanggota.data.flow == '{{ $Flow::KETUA }}') ? '"selected"' : '') + '>{{ $Flow::KETUA }}</option>');
+                    $('#info-flow-profil').html(option.val(data.data.flowanggota.data.flow));
+
+
+                    $('#loading').toggle();
+                    $('#konfigurasi').toggle();
+                }
+            });
+        });
+
+        $('#info-flow-profil').on('change', '#com-flow-profil', function(e) {
+            e.preventDefault();
+            
+            $.ajax({
+                method: 'post',
+                data:{'flag': e.target.value},
+                url: base_url + 'rpc/anggota/' + mProfil.userId + '/flow',
+                success: function( result, textStatus, jqXHR ) {
+                    
+                }
+            });
+        });
+
+        $('#modal-flow-profil').on('hidden.bs.modal', function(e) {
+            $('#loading').toggle();
+            $('#konfigurasi').toggle();
+        });
+
+        function openModal(modal, header)
+        {
+            var modal = $(modal);
+
+            modal.find('.modal-header').css('backgroundColor','steelblue');
+            modal.find('.modal-header').css('color','white');
+            modal.find('.modal-title').text(header+' : '+mProfil.title);
+
+            modal.modal({backdrop: 'static', keyboard: false});
+        }
     });
 </script>
 
