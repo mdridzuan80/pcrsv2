@@ -14,4 +14,9 @@ class XtraAnggota extends Model
     {
         return $this->belongsTo(Department::class, 'basedept_id');
     }
+
+    public function flowBaseDepartment()
+    {
+        return $this->hasOne(FlowBahagian::class, 'dept_id', 'basedept_id');
+    }
 }

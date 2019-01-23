@@ -64,6 +64,11 @@ Route::middleware('auth:internal,ldap')->group(function () {
             //Base Bahagian
             Route::get('/{profil}/basebahagian', 'AnggotaController@rpcBaseBahagianShow')->middleware('can:view-base-bahagian');
             Route::post('/{profil}/basebahagian', 'AnggotaController@rpcBaseBahagianStore')->middleware('can:edit-base-bahagian');
+
+            //Flow Profil
+            Route::get('/{profil}/flow', 'AnggotaController@rpcFlowShow')->middleware('can:view-flow-profil');
+            Route::post('/{profil}/flow', 'AnggotaController@rpcFlowUpdate')->middleware('can:edit-flow-profil');
+
         });
 
         Route::prefix('pengguna')->group(function () {

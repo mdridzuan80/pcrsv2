@@ -71,6 +71,11 @@ class Anggota extends BaseModel
         return $this->hasOne(XtraAnggota::class, 'anggota_id');
     }
 
+    public function flow()
+    {
+        return $this->hasOne(FlowAnggota::class, 'anggota_id');
+    }
+
     public function scopeAuthorize($query)
     {
         $related = [];
@@ -129,4 +134,10 @@ class Anggota extends BaseModel
     {
         $this->xtraAttr()->updateOrCreate([], ['basedept_id' => $request->input('txtDepartmentId')]);
     }
+
+    public function updateFlow(Request $request)
+    {
+        $this->flow()->updateOrCreate([], ['flag' => $request->input('flag'), 'ubah_user_id' => Auth::user()->username]);
+    }
+
 }
