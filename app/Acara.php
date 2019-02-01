@@ -23,7 +23,6 @@ class Acara extends Eventable
 
     const JENIS_ACARA_RASMI = 'RASMI';
     const JENIS_ACARA_TIDAK_RASMI = 'TIDAK_RASMI';
-
     const STATUS_PERMOHONAN_MOHON = 'MOHON';
     const STATUS_PERMOHONAN_BATAL = 'BATAL';
     const STATUS_PERMOHONAN_LULUS = 'LULUS';
@@ -32,6 +31,13 @@ class Acara extends Eventable
     public function scopeEvents($query)
     {
         return $query->select(DB::raw('perkara as [title]'), DB::raw('masa_mula as [start]'), DB::raw('masa_tamat as [end]'), DB::raw('\'false\' as [allDay]'), DB::raw('\'#e74c3c\' as [color]'), DB::raw('\'white\' as [textColor]'), DB::raw('id'), DB::raw('\'' . Eventable::ACARA . '\' as [table_name]'));
+    }
+
+    public function scopeGetByDateRange($query, $start, $end)
+    {
+        $acaraMula = clone $query;
+
+        return $query->where('masa_tamat', '>=', $start)->where('masa_tamat', '<', $end)->union($acaraMula->where('masa_mula', '>=', $start)->where('masa_mula', '<', $end));
     }
 
     public function scopeGetEventablesByDate($query, Carbon $tarikh)
@@ -64,12 +70,5 @@ class Acara extends Eventable
             'id' => $this->id,
             'table_name' => 'acara'
         ]);
-    }
-
-    public function scopeGetByDateRange($query, $start, $end)
-    {
-        $acaraMula = clone $query;
-
-        return $query->where('masa_tamat', '>=', $start)->where('masa_tamat', '<', $end)->union($acaraMula->where('masa_mula', '>=', $start)->where('masa_mula', '<', $end));
     }
 }

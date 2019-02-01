@@ -81,8 +81,6 @@ class KalendarController extends BaseController
         foreach ($this->_eventable as $eventable) {
             $event = $event->merge($profil->getAcaraTerlibat($eventable, $tarikh));
         }
-
-        dd($event);
     }
 
     private function viewAcara($jenisSumber, $event)
