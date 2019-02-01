@@ -66,7 +66,7 @@
         </div>
 
         <div class="modal fade" id="modal-acara-anggota" style="display: none;">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header" style="background-color: steelblue; color: white;">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -97,6 +97,7 @@
                 hours: 0,
             }; 
 
+            var currentEvent = '';
             var acaraUrlProp = {
                 schema: '',
                 schema_id: ''
@@ -106,25 +107,11 @@
                 firstDay: 1,
                 showNonCurrentDates: false,
                 eventClick: function(calEvent, jsEvent, view) {
-                    $('#modal-acara-anggota .modal-header').css("background-color", calEvent.color);
+                    var modal = $('#modal-acara-anggota');
 
-                    if (calEvent.scheme == 'final' || calEvent.scheme == 'current') {
-                        $('#modal-acara-anggota .modal-title').html("REKOD PUNCH-IN/ PUNCH-OUT");
-                    }
-
-                    if (calEvent.scheme == 'cuti') {
-                        $('#modal-acara-anggota .modal-title').html("CUTI UMUM : " + calEvent.title.toUpperCase());
-                    }
-
-                    if (calEvent.scheme == 'acara') {
-                        $('#modal-acara-anggota .modal-title').html("ACARA : " + calEvent.title.toUpperCase());
-                        $('#modal-acara-anggota .modal-header').css("color", "white");
-                    }
-
-                    acaraUrlProp.schema = calEvent.scheme;
-                    acaraUrlProp.schema_id = calEvent.scheme_id;
-
-                    $('#modal-acara-anggota').modal('show');
+                    currentEvent = calEvent;
+                    modal.find('.modal-title').html("MAKLUMAT ACARA PADA : " + calEvent.start.format('D MMMM YYYY').toUpperCase());
+                    modal.modal({backdrop: 'static',keyboard: false});
                 },
                 events: function(start, end, timezone, callback) {
                     $.ajax({
@@ -263,7 +250,7 @@
             // modal acara
              $('#modal-acara-anggota').on('show.bs.modal', function(e) {                
                 $.ajax({
-                    url: base_url+'rpc/kalendar/{{ Auth::user()->anggota_id }}/acara/'+acaraUrlProp.schema_id+'/'+acaraUrlProp.schema,
+                    url: base_url+'rpc/kalendar/{{ Auth::user()->anggota_id }}/acara/' + currentEvent.start.format('YYYY-MM-DD'),
                     success: (res, textStatus, jqXHR) => {
                         $(this).find('.modal-body').html(res);
                     }

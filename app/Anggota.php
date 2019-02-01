@@ -2,12 +2,17 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use App\Base\BaseModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class Anggota extends BaseModel
 {
+    const KEHADIRAN = 'kehadiran';
+    const FINALKEHADIRAN = 'finalKehadiran';
+    const ACARA = 'acara';
+
     public function __construct()
     {
         $this->table = $this->appDbSchema . 'USERINFO';
@@ -140,4 +145,22 @@ class Anggota extends BaseModel
         $this->flow()->updateOrCreate([], ['flag' => $request->input('flag'), 'ubah_user_id' => Auth::user()->username]);
     }
 
+    public function getAcaraTerlibat($method, Carbon $tarikh)
+    {
+        if ($method === self::KEHADIRAN) {
+            $today = null;
+
+            if ($tarikh->isToday()) {
+                $today = $this->{$method}()->today()->get();
+
+                if ($today) {
+                    return Kehadiran::itemEventableNone();
+                }
+            }
+
+            return $today;
+        }
+
+        return $this->{$method}()->getEventablesByDate($tarikh)->get();
+    }
 }

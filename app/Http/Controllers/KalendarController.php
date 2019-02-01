@@ -6,6 +6,7 @@ use App\Cuti;
 use App\Acara;
 use App\Anggota;
 use App\Kehadiran;
+use Carbon\Carbon;
 use App\FinalAttendance;
 use League\Fractal\Manager;
 use App\Transformers\Event;
@@ -21,12 +22,12 @@ class KalendarController extends BaseController
     private $_eventable;
     private $_viewAcara;
 
-    public function __construct(FinalAttendance $final, Cuti $cuti, Acara $acara)
+    public function __construct()
     {
         $this->_eventable = [
-            Eventable::FINALATT => $final,
-            Eventable::CUTI => $cuti,
-            Eventable::ACARA => $acara,
+            'kehadiran',
+            'finalKehadiran',
+            'acara',
         ];
     }
 
@@ -34,11 +35,9 @@ class KalendarController extends BaseController
     {
         $checkinout = collect($profil->finalKehadiran()->events()->whereBetween('tarikh', [$request->input('start'), $request->input('end')])->get()->toArray());
         $cuti = Cuti::events()->whereBetween('tarikh', [$request->input('start'), $request->input('end')])->get()->toArray();
+        $acara = $profil->acara()->events()->getByDateRange($request->input('start'), $request->input('end'))->get();
 
-        $acaraMula = $profil->acara()->events()->whereBetween('masa_mula', [$request->input('start'), $request->input('end')]);
-        $acaraTamat = $profil->acara()->events()->whereBetween('masa_tamat', [$request->input('start'), $request->input('end')])->union($acaraMula)->get();
-
-        $events = $checkinout->merge($cuti)->merge($acaraTamat);
+        $events = $checkinout->merge($cuti)->merge($acara);
 
         if ($checkIn = optional(Kehadiran::events()->whereBetween('CHECKTIME', [today()->addHours(4), today()->addHours(13)])->first())->toArray())
             $events = $events->push($checkIn);
@@ -72,6 +71,18 @@ class KalendarController extends BaseController
         }
 
         return $this->viewAcara($jenisSumber, $event);
+    }
+
+    public function rpcEventAnggotaShow2(Anggota $profil, $tarikh)
+    {
+        $event = collect();
+        $tarikh = Carbon::parse($tarikh);
+
+        foreach ($this->_eventable as $eventable) {
+            $event = $event->merge($profil->getAcaraTerlibat($eventable, $tarikh));
+        }
+
+        dd($event);
     }
 
     private function viewAcara($jenisSumber, $event)

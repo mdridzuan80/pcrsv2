@@ -84,7 +84,7 @@ Route::middleware('auth:internal,ldap')->group(function () {
             Route::get('/{profil}', 'KalendarController@rpcEventAnggotaIndex');
             Route::get('/{profil}/acara/create', 'KalendarController@rpcEventAnggotaCreate');
             Route::post('/{profil}/acara', 'KalendarController@rpcEventAnggotaStore');
-            Route::get('/{profil}/acara/{acara}/{jenis}', 'KalendarController@rpcEventAnggotaShow');
+            Route::get('/{profil}/acara/{tarikh}', 'KalendarController@rpcEventAnggotaShow2');
         });
 
         Route::prefix('konfigurasi')->group(function () {

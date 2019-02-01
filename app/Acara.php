@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Abstraction\Eventable;
 use Illuminate\Support\Facades\DB;
@@ -33,6 +34,13 @@ class Acara extends Eventable
         return $query->select(DB::raw('perkara as [title]'), DB::raw('masa_mula as [start]'), DB::raw('masa_tamat as [end]'), DB::raw('\'false\' as [allDay]'), DB::raw('\'#e74c3c\' as [color]'), DB::raw('\'white\' as [textColor]'), DB::raw('id'), DB::raw('\'' . Eventable::ACARA . '\' as [table_name]'));
     }
 
+    public function scopeGetEventablesByDate($query, Carbon $tarikh)
+    {
+        $tarikh_tamat = clone $tarikh;
+
+        return $query->events()->getByDateRange($tarikh, $tarikh_tamat->addDay());
+    }
+
     public static function storeAcara(Anggota $profil, Request $request)
     {
         $acara = new Acara;
@@ -56,5 +64,12 @@ class Acara extends Eventable
             'id' => $this->id,
             'table_name' => 'acara'
         ]);
+    }
+
+    public function scopeGetByDateRange($query, $start, $end)
+    {
+        $acaraMula = clone $query;
+
+        return $query->where('masa_tamat', '>=', $start)->where('masa_tamat', '<', $end)->union($acaraMula->where('masa_mula', '>=', $start)->where('masa_mula', '<', $end));
     }
 }

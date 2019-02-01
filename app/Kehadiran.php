@@ -40,6 +40,11 @@ class Kehadiran extends Eventable
         return $query->select(DB::raw('\'IN: \' + ISNULL(RIGHT(convert(varchar, CHECKTIME, 100),7), \'-\') + CHAR(10) + \'OUT: -\' as [title]'), DB::raw('\'' . today() . '\' as [start]'), DB::raw('\'' . today() . '\' as [end]'), DB::raw('\'true\' as [allDay]'), DB::raw('\'#dcf442\' as [color]'), DB::raw('\'#000\' as [textColor]'), DB::raw('0 as [id] '), DB::raw('\'' . Eventable::CURRENTATT . '\' as [table_name]'));
     }
 
+    public function scopeToday($query)
+    {
+        return $query->whereBetween('CHECKTIME', [today()->addHours(4), today()->addHours(13)]);
+    }
+
     public static function itemEventableNone()
     {
         return [

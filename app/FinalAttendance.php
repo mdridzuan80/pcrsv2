@@ -45,4 +45,5 @@ class FinalAttendance extends Eventable
         $masa = explode("\n", $this->title);
         return trim(explode(":", $masa[1], 2)[1]);
     }
+
 }
