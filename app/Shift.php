@@ -11,6 +11,7 @@ class Shift extends Model
         'check_in',
         'check_out',
     ];
+    protected $dateFormat = 'Y-m-d H:i:s';
 
     public function anggota()
     {

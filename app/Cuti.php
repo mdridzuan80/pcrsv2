@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Cuti extends Eventable
 {
+    protected $dateFormat = 'Y-m-d H:i:s';
+
     protected $table = 'cuti';
     protected $dates = [
         'tarikh',

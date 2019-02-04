@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 
 class Anggota extends BaseModel
 {
+    protected $dateFormat = 'Y-m-d H:i:s';
+
     const KEHADIRAN = 'kehadiran';
     const FINALKEHADIRAN = 'finalKehadiran';
     const ACARA = 'acara';

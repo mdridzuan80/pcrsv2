@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class XtraAnggota extends Model
 {
     protected $table = 'xtra_userinfo';
+    protected $dateFormat = 'Y-m-d H:i:s';
 
     protected $fillable = ['basedept_id'];
 

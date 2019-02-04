@@ -20,6 +20,7 @@ class Kehadiran extends Eventable
     const FLAG_TATATERTIB_CLEAR = "C";
     const FLAG_TATATERTIB_TUNJUK_SEBAB = "TS";
 
+    protected $dateFormat = 'Y-m-d H:i:s';
     protected $dates = ['CHECKTIME'];
 
     public function __construct()

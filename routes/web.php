@@ -13,11 +13,8 @@
 
 Auth::routes();
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Route::middleware('auth:internal,ldap')->group(function () {
+    Route::get('/', 'DashboardController@index');
 
     Route::get('/home', 'HomeController@index')->name('home');
     Route::get('/dashboard', 'DashboardController@index')->name('dashboard');

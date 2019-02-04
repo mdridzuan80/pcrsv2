@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class FinalAttendance extends Eventable
 {
+    protected $dateFormat = 'Y-m-d H:i:s';
+
     protected $fillable = [
         'anggota_id',
         'tarikh',

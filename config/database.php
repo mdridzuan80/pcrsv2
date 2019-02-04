@@ -11,7 +11,7 @@ return [
     | to use as your default connection for all database work. Of course
     | you may use many connections at once using the Database library.
     |
-    */
+ */
 
     'default' => env('DB_CONNECTION', 'mysql'),
 
@@ -29,7 +29,7 @@ return [
     | so make sure you have the driver for your particular database of
     | choice installed on your machine before you begin development.
     |
-    */
+     */
 
     'connections' => [
 
@@ -78,6 +78,24 @@ return [
             'prefix' => env('DB_PREFIX', ''),
         ],
 
+        'odbc' => [
+            'driver' => 'sqlsrv',
+            //'odbc' => true,
+            //'odbc_datasource_name' => 'pcrsv2',
+            //'dsn' => 'Driver={ODBC Driver 17 for SQL Server};Server=' . env('DB_HOST', 'localhost') . ';Trusted_Connection=True;Database=' . env('DB_DATABASE', 'forge') . ';',
+            'host' => env('DB_HOST', 'localhost'),
+            'port' => env('DB_PORT', '1433'),
+            'database' => env('DB_DATABASE', 'forge'),
+            'username' => env('DB_USERNAME', 'forge'),
+            'password' => env('DB_PASSWORD', ''),
+            //'charset' => 'utf8',
+            //'prefix' => env('DB_PREFIX', ''),
+            'grammer' => [
+                'query' => Illuminate\Database\Query\Grammars\SqlServerGrammar::class,
+                'schema' => Illuminate\Database\Schema\Grammars\SqlServerGrammar::class,
+            ],
+        ],
+
     ],
 
     /*
@@ -89,7 +107,7 @@ return [
     | your application. Using this information, we can determine which of
     | the migrations on disk haven't actually been run in the database.
     |
-    */
+     */
 
     'migrations' => 'migrations',
 
@@ -102,7 +120,7 @@ return [
     | provides a richer set of commands than a typical key-value systems
     | such as APC or Memcached. Laravel makes it easy to dig right in.
     |
-    */
+     */
 
     'redis' => [
 

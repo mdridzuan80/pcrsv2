@@ -13,7 +13,7 @@ class Acara extends Eventable
 {
     use SoftDeletes;
 
-    protected $dateFormat = 'Y-m-d H:i:s.v';
+    protected $dateFormat = 'Y-m-d H:i:s';
     protected $table = 'acara';
     protected $dates = [
         'masa_mula',
