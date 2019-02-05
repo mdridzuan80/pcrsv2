@@ -8,14 +8,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class Cuti extends Eventable
 {
-    protected $dateFormat = 'Y-m-d H:i:s';
-
     protected $table = 'cuti';
+
     protected $dates = [
         'tarikh',
         'start',
         'end',
     ];
+
+    public function __construct()
+    {
+        $this->setDateFormat(config('pcrs.modelDateFormat'));
+    }
 
     public function scopeEvents($query)
     {

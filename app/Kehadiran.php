@@ -28,6 +28,7 @@ class Kehadiran extends Eventable
         $this->table = $this->appDbSchema . 'CHECKINOUT';
         $this->primaryKey = ['USERID', 'CHECKTIME'];
         $this->incrementing = false;
+        $this->setDateFormat(config('pcrs.modelDateFormat'));
     }
 
     public function scopeRekodByMulaTamat($query, Carbon $tkhMula, Carbon $tkhTamat)

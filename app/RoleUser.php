@@ -7,7 +7,11 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 class RoleUser extends Pivot
 {
     protected $table = 'role_user';
-    protected $dateFormat = 'Y-m-d H:i:s';
+
+    public function __construct()
+    {
+        $this->setDateFormat(config('pcrs.modelDateFormat'));
+    }
 
     public function department()
     {

@@ -10,9 +10,13 @@ class PegawaiPenilai extends Model
     const FLAG_PEGAWAI_KEDUA = 2;
 
     protected $table = 'pegawai_penilai';
-    protected $dateFormat = 'Y-m-d H:i:s';
 
     protected $fillable = ['anggota_id', 'pegawai_id', 'pegawai_flag'];
+
+    public function __construct()
+    {
+        $this->setDateFormat(config('pcrs.modelDateFormat'));
+    }
 
     public function personel()
     {

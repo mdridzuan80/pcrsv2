@@ -8,8 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class FinalAttendance extends Eventable
 {
-    protected $dateFormat = 'Y-m-d H:i:s';
-
     protected $fillable = [
         'anggota_id',
         'tarikh',
@@ -30,6 +28,11 @@ class FinalAttendance extends Eventable
         'start',
         'end',
     ];
+
+    public function __construct()
+    {
+        $this->setDateFormat(config('pcrs.modelDateFormat'));
+    }
 
     public function scopeEvents($query)
     {

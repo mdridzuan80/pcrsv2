@@ -81,16 +81,16 @@ return [
         'odbc' => [
             'driver' => 'sqlsrv',
             //'odbc' => true,
-            //'odbc_datasource_name' => 'pcrsv2',
+            'odbc_datasource_name' => 'pcrsv2',
             //'dsn' => 'Driver={ODBC Driver 17 for SQL Server};Server=' . env('DB_HOST', 'localhost') . ';Trusted_Connection=True;Database=' . env('DB_DATABASE', 'forge') . ';',
             'host' => env('DB_HOST', 'localhost'),
             'port' => env('DB_PORT', '1433'),
             'database' => env('DB_DATABASE', 'forge'),
             'username' => env('DB_USERNAME', 'forge'),
             'password' => env('DB_PASSWORD', ''),
-            //'charset' => 'utf8',
-            //'prefix' => env('DB_PREFIX', ''),
-            'grammer' => [
+            'charset' => 'utf8',
+            'prefix' => env('DB_PREFIX', ''),
+            'grammar' => [
                 'query' => Illuminate\Database\Query\Grammars\SqlServerGrammar::class,
                 'schema' => Illuminate\Database\Schema\Grammars\SqlServerGrammar::class,
             ],

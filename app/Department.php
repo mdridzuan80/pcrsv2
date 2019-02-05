@@ -7,11 +7,10 @@ use App\Base\BaseModel;
 
 class Department extends BaseModel
 {
-    protected $dateFormat = 'Y-m-d H:i:s';
-
     public function __construct()
     {
         $this->table = $this->appDbSchema . 'DEPARTMENTS';
+        $this->setDateFormat(config('pcrs.modelDateFormat'));
         $this->primaryKey = 'DEPTID';
     }
 

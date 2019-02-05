@@ -9,8 +9,6 @@ use Illuminate\Support\Facades\Auth;
 
 class Anggota extends BaseModel
 {
-    protected $dateFormat = 'Y-m-d H:i:s';
-
     const KEHADIRAN = 'kehadiran';
     const FINALKEHADIRAN = 'finalKehadiran';
     const ACARA = 'acara';
@@ -19,6 +17,7 @@ class Anggota extends BaseModel
     {
         $this->table = $this->appDbSchema . 'USERINFO';
         $this->primaryKey = 'USERID';
+        $this->setDateFormat(config('pcrs.modelDateFormat'));
     }
 
     public function department()

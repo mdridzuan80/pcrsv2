@@ -32,7 +32,10 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    protected $dateFormat = 'Y-m-d H:i:s';
+    public function __construct()
+    {
+        $this->setDateFormat(config('pcrs.modelDateFormat'));
+    }
 
     public function username()
     {

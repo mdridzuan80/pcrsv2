@@ -11,7 +11,11 @@ class Shift extends Model
         'check_in',
         'check_out',
     ];
-    protected $dateFormat = 'Y-m-d H:i:s';
+
+    public function __construct()
+    {
+        $this->setDateFormat(config('pcrs.modelDateFormat'));
+    }
 
     public function anggota()
     {

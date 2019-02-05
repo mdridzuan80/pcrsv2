@@ -13,7 +13,6 @@ class Acara extends Eventable
 {
     use SoftDeletes;
 
-    protected $dateFormat = 'Y-m-d H:i:s';
     protected $table = 'acara';
     protected $dates = [
         'masa_mula',
@@ -27,6 +26,11 @@ class Acara extends Eventable
     const STATUS_PERMOHONAN_BATAL = 'BATAL';
     const STATUS_PERMOHONAN_LULUS = 'LULUS';
     const STATUS_PERMOHONAN_TOLAK = 'TOLAK';
+
+    public function __construct()
+    {
+        $this->setDateFormat(config('pcrs.modelDateFormat'));
+    }
 
     public function scopeEvents($query)
     {
