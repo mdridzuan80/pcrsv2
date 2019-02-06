@@ -12,6 +12,7 @@ class Anggota extends BaseModel
     const KEHADIRAN = 'kehadiran';
     const FINALKEHADIRAN = 'finalKehadiran';
     const ACARA = 'acara';
+    const CUTI = 'cuti';
 
     public function __construct()
     {
@@ -155,11 +156,15 @@ class Anggota extends BaseModel
                 $today = $this->{$method}()->today()->get();
 
                 if ($today) {
-                    return Kehadiran::itemEventableNone();
+                    return [Kehadiran::itemEventableNone()];
                 }
             }
 
             return $today;
+        }
+
+        if ($method == self::CUTI) {
+            return (new Cuti)->getEventablesByDate($tarikh)->get();
         }
 
         return $this->{$method}()->getEventablesByDate($tarikh)->get();

@@ -25,6 +25,7 @@ class KalendarController extends BaseController
     public function __construct()
     {
         $this->_eventable = [
+            'cuti',
             'kehadiran',
             'finalKehadiran',
             'acara',
@@ -75,12 +76,14 @@ class KalendarController extends BaseController
 
     public function rpcEventAnggotaShow2(Anggota $profil, $tarikh)
     {
-        $event = collect();
+        $events = collect([]);
         $tarikh = Carbon::parse($tarikh);
 
         foreach ($this->_eventable as $eventable) {
-            $event = $event->merge($profil->getAcaraTerlibat($eventable, $tarikh));
+            $events = $events->merge($profil->getAcaraTerlibat($eventable, $tarikh));
         }
+
+        return view('dashboard.acara.show.acara', compact('events', 'tarikh'));
     }
 
     private function viewAcara($jenisSumber, $event)

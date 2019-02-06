@@ -31,7 +31,6 @@ Route::middleware('auth:internal,ldap')->group(function () {
         Route::get('/konfigurasi', 'KonfigurasiController@index')->name('konfigurasi');
     });
 
-
     //Local API
     Route::prefix('rpc')->middleware('ajax')->group(function () {
         // Department

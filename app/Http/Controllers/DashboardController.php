@@ -11,8 +11,7 @@ class DashboardController extends BaseController
 {
     public function index(Request $request)
     {
-        if ($request->session()->get('perananSemasa') === Role::PENGGUNA)
-        {
+        if ($request->session()->get('perananSemasa') === Role::PENGGUNA) {
             return $this->renderView('dashboard.pengguna.index');
         }
 

@@ -114,13 +114,6 @@
                     modal.find('.modal-title').html("MAKLUMAT ACARA PADA : " + date.format('D MMMM YYYY').toUpperCase());
                     modal.modal({backdrop: 'static',keyboard: false});
                 },
-                /* eventClick: function(calEvent, jsEvent, view) {
-                    var modal = $('#modal-acara-anggota');
-
-                    currentEvent = calEvent;
-                    modal.find('.modal-title').html("MAKLUMAT ACARA PADA : " + calEvent.start.format('D MMMM YYYY').toUpperCase());
-                    modal.modal({backdrop: 'static',keyboard: false});
-                }, */
                 events: function(start, end, timezone, callback) {
                     $.ajax({
                         url: base_url+'rpc/kalendar/{{Auth::user()->anggota_id}}',
@@ -259,8 +252,8 @@
              $('#modal-acara-anggota').on('show.bs.modal', function(e) {                
                 $.ajax({
                     url: base_url+'rpc/kalendar/{{ Auth::user()->anggota_id }}/acara/' + dateClick.format('YYYY-MM-DD'),
-                    success: (res, textStatus, jqXHR) => {
-                        $(this).find('.modal-body').html(res);
+                    success: (resp, textStatus, jqXHR) => {
+                        $(this).find('.modal-body').html(resp);
                     }
                 });
             });

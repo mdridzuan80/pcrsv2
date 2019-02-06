@@ -34,7 +34,7 @@ class Acara extends Eventable
 
     public function scopeEvents($query)
     {
-        return $query->select(DB::raw('perkara as [title]'), DB::raw('masa_mula as [start]'), DB::raw('masa_tamat as [end]'), DB::raw('\'false\' as [allDay]'), DB::raw('\'#e74c3c\' as [color]'), DB::raw('\'white\' as [textColor]'), DB::raw('id'), DB::raw('\'' . Eventable::ACARA . '\' as [table_name]'));
+        return $query->select(DB::raw('perkara as [title]'), DB::raw('masa_mula as [start]'), DB::raw('masa_tamat as [end]'), DB::raw('\'false\' as [allDay]'), DB::raw('\'#e74c3c\' as [color]'), DB::raw('\'white\' as [textColor]'), DB::raw('id'), DB::raw('jenis_acara'), DB::raw('keterangan'), DB::raw('\'' . Eventable::ACARA . '\' as [table_name]'));
     }
 
     public function scopeGetByDateRange($query, $start, $end)

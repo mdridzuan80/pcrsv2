@@ -1,23 +1,68 @@
 <div class="table-responsive">
-    <form id="frm-profil-kemaskini">
-        <table class="table table-bordered">
-            <tbody>
-                <tr>
-                    <td class="col-md-3"><b>PERKARA</b></td>
-                    <td><input class="form-control" type="text" name="txtPerkara" placeholder="Perkara" value="{{ $event->title }}" required></td>
-                </tr>
-                <tr>
-                    <td class="col-md-3"><b>MASA MULA</b></td>
-                    <td><input class="form-control" type="text" name="txtMasaMula" placeholder="Masa Mula" value="{{ \Carbon\Carbon::parse($event->start)->format('d-m-Y g:m A') }}" required></td>
-                </tr>
-                <tr>
-                    <td class="col-md-3"><b>MASA TAMAT</b></td>
-                    <td><input class="form-control" type="text" name="txtMasaTamat" placeholder="Masa Tamat" value="{{ \Carbon\Carbon::parse($event->end)->format('d-m-Y g:m A') }}" required></td>
-                </tr>
-            </body>
-        </table>
+    @foreach ($events as $event)
+        @if ($event instanceof App\Cuti)
+        <div class="callout callout-warning">
+            <h4>CUTI UMUM : {{ $event->title }}</h4>
+        </div>
+        @endif
 
-        <button class="btn btn-success pull-right btn-kemaskini-simpan" type="submit">SIMPAN</button>
-        <button id="btn-batal" type="button" class="btn btn-link pull-right" style="color:#dd4b39;" >BATAL</button>
-    </form>
+        @if ($tarikh->lessThanOrEqualTo(today()) && ($event instanceof App\FinalAttendance || $event instanceof App\Kehadiran || gettype($event) == 'array'))
+            <div class="box box-success box-solid">
+                <div class="box-header with-border">
+                    <h3 class="box-title">CHECK-IN/ OUT</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div class="box-body table-responsive no-padding">
+                    <table class="table table-hover">
+                        <tr>
+                        <th>CHECK-IN</th>
+                        <th>CHECK-OUT</th>
+                        </tr>
+                        <tr>
+                        <td>{{ (explode(PHP_EOL, optional($event)->title)[0]) ? explode(':', explode(PHP_EOL, optional($event)->title)[0], 2)[1] : explode(':', explode(PHP_EOL, $event['title'])[0], 2)[1] }}</td>
+                        <td>{{ explode(':', explode(PHP_EOL, optional($event)->title)[1], 2)[1] ?? explode(':', explode(PHP_EOL, $event['title'])[1], 2)[1] }}</td>
+                        </tr>
+                    </table>
+                    </div>
+                </div>
+                <!-- /.box-body -->
+            </div>
+        @endif
+
+        @if ($event instanceof App\Acara)
+            <div class="box box-danger box-solid">
+                <div class="box-header with-border">
+                <h3 class="box-title">Acara : {{ $event->title }}</h3>
+
+                <!-- /.box-tools -->
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div class="box-body table-responsive no-padding">
+                    <table class="table table-hover">
+                        <tr>
+                            <td>JENIS ACARA</td>
+                            <td>{{ $event->jenis_acara }}</td>
+                        </tr>
+                        <tr>
+                            <td>MASA MULA</td>
+                            <td>{{ $event->start }}</td>
+                        </tr>
+                        <tr>
+                            <td>MASA TAMAT</td>
+                            <td>{{ $event->end }}</td>
+                        </tr>
+                        <tr>
+                            <td>KETERANGAN</td>
+                            <td>{{ $event->keterangan }}</td>
+                        </tr>
+                    </table>
+                    </div>
+                </div>
+                <!-- /.box-body -->
+            </div>
+        @endif
+
+    @endforeach
 </div>
